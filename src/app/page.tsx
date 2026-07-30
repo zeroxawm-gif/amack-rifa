@@ -60,23 +60,22 @@ export default function Home() {
   const [moodRifa, setMoodRifa] = useState("😊 Senang");
   const [zoom, setZoom] = useState<string | null>(null);
 
-  const globalAudioRef = useRef<HTMLAudioElement | null>(null);
+  const globalAudioRef = useRef<HTMLAudioElement null |>(null);
   const [currentSongTitle, setCurrentSongTitle] = useState<string | null>(null);
   const [isPlayingGlobal, setIsPlayingGlobal] = useState(false);
 
-  const end = useRef<HTMLDivElement | null>(null);
-  const aiEndRef = useRef<HTMLDivElement | null>(null);
+  const end = useRef<HTMLDivElement null |>(null);
+  const aiEndRef = useRef<HTMLDivElement null |>(null);
 
   useEffect(() => {
     setQuote(QUOTES[Math.floor(Math.random() * QUOTES.length)]);
-    const jdDate = new Date("2025-07-03T00:00:00").getTime(); 
+    const jdDate = new Date("2023-01-01T00:00:00").getTime(); 
     const t = setInterval(() => {
       const s = new Date().getTime() - jdDate;
       setW({ h: Math.floor(s / 86400000), j: Math.floor((s / 3600000) % 24), m: Math.floor((s / 60000) % 60), d: Math.floor((s / 1000) % 60) });
     }, 1000);
     return () => clearInterval(t);
   }, []);
-
   const playSoundEffect = (type: string) => {
     try {
       const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
@@ -98,6 +97,7 @@ export default function Home() {
       }
     } catch(e) {}
   };
+
   const loadAll = async () => {
     const { data: c } = await supabase.from('Pesan').select('*').order('createdAt', { ascending: true }); 
     if (c) {
@@ -151,7 +151,6 @@ export default function Home() {
   const sendC = async (e: any) => { e.preventDefault(); if (!txt || !u) return; playSoundEffect('click'); await supabase.from('Pesan').insert([{ id: Date.now().toString(), teks: txt, senderId: u }]); setTxt(""); loadAll(); };
   const upF = (e: any) => { const f = e.target.files[0]; if (!f) return; const r = new FileReader(); r.onloadend = async () => { await supabase.from('Foto').insert([{ id: Date.now().toString(), url: r.result as string, caption: cap || "Kenangan", senderId: u }]); setCap(""); loadAll(); }; r.readAsDataURL(f); };
   
-  // UPLOAD MP3 LANGSUNG SUPAYA BISA DIPUTAR BACKGROUND
   const upM = (e: any) => { 
     const f = e.target.files[0]; 
     if (!f) return; 
@@ -163,7 +162,6 @@ export default function Home() {
     }; 
     r.readAsDataURL(f); 
   };
-
   const addY = async (e: any) => { e.preventDefault(); if (!yt || !jd || !u) return; let url = yt; if (url.includes("watch?v=")) url = url.replace("watch?v=", "embed/"); else if (url.includes("youtu.be/")) url = url.replace("youtu.be/", "www.youtube.com/embed/"); await supabase.from('Musik').insert([{ id: Date.now().toString(), judul: jd, url: url, tipe: 'youtube', senderId: u }]); setJd(""); setYt(""); loadAll(); };
   const kirimSurat = async (e: any) => { e.preventDefault(); if (!judulSurat || !isiSurat || !u) return; playSoundEffect('click'); await supabase.from('SuratCinta').insert([{ id: Date.now().toString(), judul: judulSurat, isi: isiSurat, senderId: u }]); setJudulSurat(""); setIsiSurat(""); loadAll(); };
   const tambahWish = async (e: any) => { e.preventDefault(); if (!kegiatanWish || !tglWish) return; playSoundEffect('click'); await supabase.from('BucketList').insert([{ id: Date.now().toString(), kegiatan: kegiatanWish, tanggal: tglWish, selesai: false }]); setKegiatanWish(""); setTglWish(""); loadAll(); };
@@ -195,6 +193,7 @@ export default function Home() {
     setIsPlayingGlobal(false);
     setCurrentSongTitle(null);
   };
+
   const tambahFinance = async (e: any) => {
     e.preventDefault(); if (!finJml || !u) return; playSoundEffect('click');
     const tglFinal = finTgl || new Date().toISOString().split('T')[0];
@@ -255,7 +254,6 @@ export default function Home() {
     setAnimasiAktif(jenis);
     setTimeout(() => setAnimasiAktif(null), 3500);
   };
-
   const pilihBKG = async (pilihan: string) => {
     if (!u) return; playSoundEffect('click');
     const newData = { ...bkgData, [u]: pilihan };
@@ -339,6 +337,7 @@ export default function Home() {
 
     stepMove(biji, curIdx);
   };
+
   const resetCongklak = async () => { 
     playSoundEffect('click'); 
     const empty = { board: [4,4,4,4,4,4,4, 0, 4,4,4,4,4,4,4, 0], turn: "amack", winner: "" }; 
@@ -355,7 +354,6 @@ export default function Home() {
     setThemeBgImage(mot);
     if (u) await supabase.from('UserTheme').upsert({ userId: u, bgColor: bgc, cardColor: cardc, motif: mot }, { onConflict: 'userId' });
   };
-
   if (!u) {
     return (
       <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px', backgroundColor: '#ff9a9e', backgroundImage: 'radial-gradient(circle, #ff9a9e, #feada6)', fontFamily: 'sans-serif' }}>
@@ -462,6 +460,7 @@ export default function Home() {
           </form>
         </div>
       )}
+
       {tab === 'foto' && (
         <div style={{ width: '100%', maxWidth: '380px', background: themeCard, padding: '12px', borderRadius: '20px', display: 'flex', flexDirection: 'column', height: '360px' }}>
           <h3 style={{ fontSize: '10px', fontWeight: 'bold', color: '#9333ea', marginBottom: '6px', borderBottom: '1px solid #f3e8ff', paddingBottom: '4px' }}>📸 GALERI FOTO</h3>
@@ -481,7 +480,7 @@ export default function Home() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginBottom: '6px', background: '#f0f9ff', padding: '8px', borderRadius: '12px' }}>
             <input type="text" value={jd} onChange={(x) => setJd(x.target.value)} placeholder="Judul lagu..." style={{ width: '100%', padding: '6px 8px', borderRadius: '8px', border: '1px solid #bae6fd', fontSize: '10px', outline: 'none' }} />
             <div style={{ display: 'flex', gap: '4px' }}><input type="text" value={yt} onChange={(x) => setYt(x.target.value)} placeholder="Link YouTube..." style={{ width: '100%', padding: '6px 8px', borderRadius: '8px', border: '1px solid #bae6fd', fontSize: '10px', outline: 'none' }} /><button onClick={addY} style={{ background: '#0284c7', color: '#fff', border: 'none', borderRadius: '8px', padding: '0 10px', fontSize: '10px', fontWeight: 'bold' }}>YT</button></div>
-            <label style={{ width: '100%', padding: '5px', background: '#0284c7', color: '#fff', fontWeight: 'bold', borderRadius: '8px', fontSize: '9px', textAlign: 'center', cursor: 'pointer' }}>📁 Upload MP3 HP (Wajib untuk Background)<input type="file" accept="audio/*" onChange={upM} style={{ display: 'none' }} /></label>
+            <label style={{ width: '100%', padding: '5px', background: '#0284c7', color: '#fff', fontWeight: 'bold', borderRadius: '8px', fontSize: '9px', textAlign: 'center', cursor: 'pointer' }}>📁 Upload MP3 HP<input type="file" accept="audio/*" onChange={upM} style={{ display: 'none' }} /></label>
           </div>
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px', overflowY: 'auto' }}>
             {lm.map((m) => (
@@ -499,6 +498,7 @@ export default function Home() {
           </div>
         </div>
       )}
+
       {tab === 'surat' && (
         <div style={{ width: '100%', maxWidth: '380px', background: themeCard, padding: '12px', borderRadius: '20px', display: 'flex', flexDirection: 'column', height: '360px' }}>
           <h3 style={{ fontSize: '10px', fontWeight: 'bold', color: '#e84393', marginBottom: '6px', borderBottom: '1px solid #fd79a8', paddingBottom: '4px' }}>💌 SURAT CINTA RAHASIA</h3>
@@ -512,7 +512,6 @@ export default function Home() {
           </div>
         </div>
       )}
-
       {tab === 'wishlist' && (
         <div style={{ width: '100%', maxWidth: '380px', background: themeCard, padding: '12px', borderRadius: '20px', display: 'flex', flexDirection: 'column', height: '360px' }}>
           <h3 style={{ fontSize: '10px', fontWeight: 'bold', color: '#00b894', marginBottom: '6px', borderBottom: '1px solid #55efc4', paddingBottom: '4px' }}>✨ WISHLIST & TANGGAL KENCAN</h3>
@@ -541,6 +540,7 @@ export default function Home() {
               <p style={{ fontSize: '13px', fontWeight: '900', color: '#e74c3c' }}>Rp {totalKeluar.toLocaleString('id-ID')}</p>
             </div>
           </div>
+
           <div style={{ display: 'flex', gap: '5px', marginBottom: '6px' }}>
             <select value={finTipe} onChange={(e) => setFinTipe(e.target.value as any)} style={{ padding: '6px', borderRadius: '8px', fontSize: '10px', fontWeight: 'bold', background: '#fff', border: '1px solid #a29bfe' }}>
               <option value="nabung">➕ Nabung</option>
@@ -670,7 +670,6 @@ export default function Home() {
             {gameSubTab === 'congklak' && (
               <div style={{ width: '100%', background: '#e8f8f5', padding: '15px', borderRadius: '20px', border: '2px solid #55efc4' }}>
                 <h4 style={{ fontSize: '12px', fontWeight: 'bold', color: '#00b894', marginBottom: '4px' }}>🪵 CONGLAK (REALTIME ANIMASI)</h4>
-                <p style={{ fontSize: '9px', color: '#444', marginBottom: '4px' }}>🪵 CONGLAK (REALTIME ANIMASI)</h4>
                 <p style={{ fontSize: '9px', color: '#444', marginBottom: '8px' }}>Giliran: <b>{congklakData.turn.toUpperCase()}</b> {animasiPesanInfo && <span style={{ color: '#e67e22', fontWeight: 'bold' }}>({animasiPesanInfo})</span>}</p>
                 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', alignItems: 'center', marginBottom: '10px' }}>
@@ -687,6 +686,7 @@ export default function Home() {
                       })}
                     </div>
                   </div>
+
                   <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '3px' }}>
                       {congklakData.board.slice(0, 7).map((biji: number, i: number) => {
@@ -740,11 +740,11 @@ export default function Home() {
         <button onClick={() => setTab('surat')} style={{ padding: '8px 8px', borderRadius: '14px', border: 'none', fontSize: '9px', fontWeight: 'bold', cursor: 'pointer', ...(tab === 'surat' ? { background: '#e84393', color: '#fff' } : { background: 'transparent', color: '#555' }) }}>💌 Surat</button>
         <button onClick={() => setTab('wishlist')} style={{ padding: '8px 8px', borderRadius: '14px', border: 'none', fontSize: '9px', fontWeight: 'bold', cursor: 'pointer', ...(tab === 'wishlist' ? { background: '#00b894', color: '#fff' } : { background: 'transparent', color: '#555' }) }}>✨ Wish</button>
         <button onClick={() => setTab('finance')} style={{ padding: '8px 8px', borderRadius: '14px', border: 'none', fontSize: '9px', fontWeight: 'bold', cursor: 'pointer', ...(tab === 'finance' ? { background: '#6c5ce7', color: '#fff' } : { background: 'transparent', color: '#555' }) }}>💳 Kas</button>
-        <button onClick={() => setTab('diary')} style={{ padding: '8px 8px', borderRadius: '14px', border: 'none', fontSize: '9px', fontWeight: 'bold', cursor: 'pointer', ...(tab === 'diary' ? { background: '#e84393', color: '#fff' } : { background: 'transparent', color: '#555' }) }}>📖 Diary</button>
+        <button onClick={() => setTab('diary')} style={{ padding: '8px 8px', borderRadius: '14px', border: 'none', fontSize: '9px', fontWeight: 'bold', cursor: 'pointer', ...(tab === 'diary' ? { background: '#e84393', color: '#fff' } : { background: 'transparent', color: 'gray' }) }}>📖 Diary</button>
         <button onClick={() => setTab('nobar')} style={{ padding: '8px 8px', borderRadius: '14px', border: 'none', fontSize: '9px', fontWeight: 'bold', cursor: 'pointer', ...(tab === 'nobar' ? { background: '#d63031', color: '#fff' } : { background: 'transparent', color: '#555' }) }}>🎬 Nobar</button>
         <button onClick={() => setTab('game')} style={{ padding: '8px 8px', borderRadius: '14px', border: 'none', fontSize: '9px', fontWeight: 'bold', cursor: 'pointer', ...(tab === 'game' ? { background: '#e17055', color: '#fff' } : { background: 'transparent', color: '#555' }) }}>🎮 Game</button>
         <button onClick={() => setTab('theme')} style={{ padding: '8px 8px', borderRadius: '14px', border: '1px solid #ddd', fontSize: '9px', fontWeight: 'bold', cursor: 'pointer', ...(tab === 'theme' ? { background: '#0984e3', color: '#fff' } : { background: 'transparent', color: '#555' }) }}>🎨 Tema</button>
       </nav>
     </div>
   );
-          }
+                                                                                                   }
