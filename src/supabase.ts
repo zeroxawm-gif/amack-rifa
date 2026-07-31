@@ -1,8 +1,8 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+// Masukkan URL dan Anon Key Supabase abang secara langsung di sini agar tidak error di Vercel
+const supabaseUrl = "https://bgdvkemqfxyigupvppnb.supabase.co"; 
+const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJnZHZrZW1xZnh5aWd1cHZwcG5iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUzMDc1ODgsImV4cCI6MjEwMDg4MzU4OH0.V4UzWegJHQGjjGXt-OBANKNvtDfdwbLB7-aFI3Tmexg";
 
-// Ini kurir data kita
-export const supabase = createClient(supabaseUrl, supabaseKey)
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
