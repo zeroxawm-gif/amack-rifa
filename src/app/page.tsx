@@ -144,18 +144,17 @@ export default function Home() {
     if (md) md.forEach(item => { if (item.userId === 'amack') setMoodAmack(item.mood); if (item.userId === 'rifa') setMoodRifa(item.mood); });
   };
 
-    useEffect(() => {
-    // 1. Tarik data awal saat halaman dibuka
+      useEffect(() => {
     loadAll();
 
-    // 2. Aktifkan Realtime Listener agar langsung update tanpa refresh
     const channel = supabase
-      .channel('schema-db-changes')
+      .channel('public:all-tables')
       .on(
         'postgres_changes',
         { event: '*', schema: 'public' },
-        (payload) => {
-          loadAll(); // Otomatis refresh data di layar saat ada perubahan
+        async (payload) => {
+          // Memastikan data ditarik ulang secara instan begitu ada perubahan
+          await loadAll();
         }
       )
       .subscribe();
