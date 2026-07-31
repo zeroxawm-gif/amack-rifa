@@ -15,20 +15,29 @@ export default function Home() {
   const [w, setW] = useState({ h: 0, j: 0, m: 0, d: 0 });
   const [quote, setQuote] = useState("");
 
-  const [txt, setTxt] = useState(""); const [lc, setLc] = useState<any[]>([]);
-  const [cap, setCap] = useState(""); const [lf, setLf] = useState<any[]>([]);
-  const [jd, setJd] = useState(""); const [yt, setYt] = useState(""); const [lm, setLm] = useState<any[]>([]);
+  const [txt, setTxt] = useState(""); 
+  const [lc, setLc] = useState<any[]>([]);
+  const [cap, setCap] = useState(""); 
+  const [lf, setLf] = useState<any[]>([]);
+  const [jd, setJd] = useState(""); 
+  const [yt, setYt] = useState(""); 
+  const [lm, setLm] = useState<any[]>([]);
   const [suratList, setSuratList] = useState<any[]>([]);
-  const [judulSurat, setJudulSurat] = useState(""); const [isiSurat, setIsiSurat] = useState("");
+  const [judulSurat, setJudulSurat] = useState(""); 
+  const [isiSurat, setIsiSurat] = useState("");
   const [bukaSurat, setBukaSurat] = useState<any | null>(null);
   const [wishlist, setWishlist] = useState<any[]>([]);
-  const [kegiatanWish, setKegiatanWish] = useState(""); const [tglWish, setTglWish] = useState("");
+  const [kegiatanWish, setKegiatanWish] = useState(""); 
+  const [tglWish, setTglWish] = useState("");
   const [nobarList, setNobarList] = useState<any[]>([]);
-  const [inputWebNobar, setInputWebNobar] = useState(""); const [judulNobar, setJudulNobar] = useState("");
+  const [inputWebNobar, setInputWebNobar] = useState(""); 
+  const [judulNobar, setJudulNobar] = useState("");
 
   const [financeList, setFinanceList] = useState<any[]>([]);
   const [finTipe, setFinTipe] = useState<"nabung" | "pengeluaran">("nabung");
-  const [finJml, setFinJml] = useState(""); const [finKet, setFinKet] = useState(""); const [finTgl, setFinTgl] = useState("");
+  const [finJml, setFinJml] = useState(""); 
+  const [finKet, setFinKet] = useState(""); 
+  const [finTgl, setFinTgl] = useState("");
   const [bulanFilter, setBulanFilter] = useState("semua");
 
   const [animasiAktif, setAnimasiAktif] = useState<string | null>(null);
@@ -60,22 +69,23 @@ export default function Home() {
   const [moodRifa, setMoodRifa] = useState("😊 Senang");
   const [zoom, setZoom] = useState<string | null>(null);
 
-  const globalAudioRef = useRef<HTMLAudioElement null |>(null);
+  const globalAudioRef = useRef<HTMLAudioElement>(null);
   const [currentSongTitle, setCurrentSongTitle] = useState<string | null>(null);
   const [isPlayingGlobal, setIsPlayingGlobal] = useState(false);
 
-  const end = useRef<HTMLDivElement null |>(null);
-  const aiEndRef = useRef<HTMLDivElement null |>(null);
+  const end = useRef<HTMLDivElement>(null);
+  const aiEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setQuote(QUOTES[Math.floor(Math.random() * QUOTES.length)]);
-    const jdDate = new Date("2023-01-01T00:00:00").getTime(); 
+    const jdDate = new Date("2025-07-03T00:00:00").getTime(); 
     const t = setInterval(() => {
       const s = new Date().getTime() - jdDate;
       setW({ h: Math.floor(s / 86400000), j: Math.floor((s / 3600000) % 24), m: Math.floor((s / 60000) % 60), d: Math.floor((s / 1000) % 60) });
     }, 1000);
     return () => clearInterval(t);
   }, []);
+  
   const playSoundEffect = (type: string) => {
     try {
       const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
@@ -162,6 +172,7 @@ export default function Home() {
     }; 
     r.readAsDataURL(f); 
   };
+
   const addY = async (e: any) => { e.preventDefault(); if (!yt || !jd || !u) return; let url = yt; if (url.includes("watch?v=")) url = url.replace("watch?v=", "embed/"); else if (url.includes("youtu.be/")) url = url.replace("youtu.be/", "www.youtube.com/embed/"); await supabase.from('Musik').insert([{ id: Date.now().toString(), judul: jd, url: url, tipe: 'youtube', senderId: u }]); setJd(""); setYt(""); loadAll(); };
   const kirimSurat = async (e: any) => { e.preventDefault(); if (!judulSurat || !isiSurat || !u) return; playSoundEffect('click'); await supabase.from('SuratCinta').insert([{ id: Date.now().toString(), judul: judulSurat, isi: isiSurat, senderId: u }]); setJudulSurat(""); setIsiSurat(""); loadAll(); };
   const tambahWish = async (e: any) => { e.preventDefault(); if (!kegiatanWish || !tglWish) return; playSoundEffect('click'); await supabase.from('BucketList').insert([{ id: Date.now().toString(), kegiatan: kegiatanWish, tanggal: tglWish, selesai: false }]); setKegiatanWish(""); setTglWish(""); loadAll(); };
@@ -184,7 +195,7 @@ export default function Home() {
     }
   };
 
-  const stopGlobalAudio = () => {
+const stopGlobalAudio = () => {
     playSoundEffect('click');
     if (globalAudioRef.current) {
       globalAudioRef.current.pause();
@@ -254,7 +265,8 @@ export default function Home() {
     setAnimasiAktif(jenis);
     setTimeout(() => setAnimasiAktif(null), 3500);
   };
-  const pilihBKG = async (pilihan: string) => {
+
+const pilihBKG = async (pilihan: string) => {
     if (!u) return; playSoundEffect('click');
     const newData = { ...bkgData, [u]: pilihan };
     if (newData.amack && newData.rifa) {
@@ -354,6 +366,7 @@ export default function Home() {
     setThemeBgImage(mot);
     if (u) await supabase.from('UserTheme').upsert({ userId: u, bgColor: bgc, cardColor: cardc, motif: mot }, { onConflict: 'userId' });
   };
+
   if (!u) {
     return (
       <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px', backgroundColor: '#ff9a9e', backgroundImage: 'radial-gradient(circle, #ff9a9e, #feada6)', fontFamily: 'sans-serif' }}>
@@ -403,7 +416,7 @@ export default function Home() {
           <button onClick={() => setU(null)} style={{ background: themeCard, color: '#ff4757', border: 'none', padding: '6px 12px', borderRadius: '14px', fontSize: '11px', fontWeight: 'bold' }}>Keluar</button>
         </div>
       </div>
-
+      
       <div style={{ width: '100%', maxWidth: '380px', display: 'flex', gap: '8px', marginBottom: '8px' }}>
         <button onClick={() => triggerAnimasi('hug')} style={{ flex: 1, padding: '8px', background: '#ff7675', color: '#fff', border: 'none', borderRadius: '12px', fontWeight: 'bold', fontSize: '10px', cursor: 'pointer', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>🤗 Kirim Virtual Hug</button>
         <button onClick={() => triggerAnimasi('kiss')} style={{ flex: 1, padding: '8px', background: '#fd79a8', color: '#fff', border: 'none', borderRadius: '12px', fontWeight: 'bold', fontSize: '10px', cursor: 'pointer', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>💋 Kirim Virtual Kiss</button>
@@ -512,6 +525,7 @@ export default function Home() {
           </div>
         </div>
       )}
+
       {tab === 'wishlist' && (
         <div style={{ width: '100%', maxWidth: '380px', background: themeCard, padding: '12px', borderRadius: '20px', display: 'flex', flexDirection: 'column', height: '360px' }}>
           <h3 style={{ fontSize: '10px', fontWeight: 'bold', color: '#00b894', marginBottom: '6px', borderBottom: '1px solid #55efc4', paddingBottom: '4px' }}>✨ WISHLIST & TANGGAL KENCAN</h3>
@@ -740,11 +754,11 @@ export default function Home() {
         <button onClick={() => setTab('surat')} style={{ padding: '8px 8px', borderRadius: '14px', border: 'none', fontSize: '9px', fontWeight: 'bold', cursor: 'pointer', ...(tab === 'surat' ? { background: '#e84393', color: '#fff' } : { background: 'transparent', color: '#555' }) }}>💌 Surat</button>
         <button onClick={() => setTab('wishlist')} style={{ padding: '8px 8px', borderRadius: '14px', border: 'none', fontSize: '9px', fontWeight: 'bold', cursor: 'pointer', ...(tab === 'wishlist' ? { background: '#00b894', color: '#fff' } : { background: 'transparent', color: '#555' }) }}>✨ Wish</button>
         <button onClick={() => setTab('finance')} style={{ padding: '8px 8px', borderRadius: '14px', border: 'none', fontSize: '9px', fontWeight: 'bold', cursor: 'pointer', ...(tab === 'finance' ? { background: '#6c5ce7', color: '#fff' } : { background: 'transparent', color: '#555' }) }}>💳 Kas</button>
-        <button onClick={() => setTab('diary')} style={{ padding: '8px 8px', borderRadius: '14px', border: 'none', fontSize: '9px', fontWeight: 'bold', cursor: 'pointer', ...(tab === 'diary' ? { background: '#e84393', color: '#fff' } : { background: 'transparent', color: 'gray' }) }}>📖 Diary</button>
+        <button onClick={() => setTab('diary')} style={{ padding: '8px 8px', borderRadius: '14px', border: 'none', fontSize: '9px', fontWeight: 'bold', cursor: 'pointer', ...(tab === 'diary' ? { background: '#e84393', color: '#fff' } : { background: 'transparent', color: '#555' }) }}>📖 Diary</button>
         <button onClick={() => setTab('nobar')} style={{ padding: '8px 8px', borderRadius: '14px', border: 'none', fontSize: '9px', fontWeight: 'bold', cursor: 'pointer', ...(tab === 'nobar' ? { background: '#d63031', color: '#fff' } : { background: 'transparent', color: '#555' }) }}>🎬 Nobar</button>
         <button onClick={() => setTab('game')} style={{ padding: '8px 8px', borderRadius: '14px', border: 'none', fontSize: '9px', fontWeight: 'bold', cursor: 'pointer', ...(tab === 'game' ? { background: '#e17055', color: '#fff' } : { background: 'transparent', color: '#555' }) }}>🎮 Game</button>
         <button onClick={() => setTab('theme')} style={{ padding: '8px 8px', borderRadius: '14px', border: '1px solid #ddd', fontSize: '9px', fontWeight: 'bold', cursor: 'pointer', ...(tab === 'theme' ? { background: '#0984e3', color: '#fff' } : { background: 'transparent', color: '#555' }) }}>🎨 Tema</button>
       </nav>
     </div>
   );
-                                                                                                   }
+      }
