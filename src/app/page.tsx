@@ -212,12 +212,25 @@ const stopGlobalAudio = () => {
     setFinJml(""); setFinKet(""); setFinTgl(""); loadAll();
   };
 
-  const tambahDiary = async (e: any) => {
-    e.preventDefault(); if (!judulDiary || !isiDiary || !u) return; playSoundEffect('click');
-    await supabase.from('LoveDiary').insert([{ id: Date.now().toString(), judul: judulDiary, isi: isiDiary, senderId: u }]);
-    setJudulDiary(""); setIsiDiary(""); loadAll();
+    const tambahDiary = async (e: any) => {
+    e.preventDefault(); 
+    if (!judulDiary || !isiDiary || !u) return; 
+    playSoundEffect('click');
+    
+    const { error } = await supabase.from('LoveDiary').insert([
+      { id: Date.now().toString(), judul: judulDiary, isi: isiDiary, senderId: u }
+    ]);
+    
+    if (error) {
+      console.log("Error diary:", error.message);
+      alert("Gagal menyimpan diary: " + error.message);
+    } else {
+      setJudulDiary(""); 
+      setIsiDiary(""); 
+      loadAll();
+    }
   };
-
+  
   const kirimPesanAI = async (e: any) => {
     e.preventDefault();
     if (!aiChatInput.trim() || isAiLoading) return;
