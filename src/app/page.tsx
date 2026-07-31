@@ -144,15 +144,26 @@ export default function Home() {
     if (md) md.forEach(item => { if (item.userId === 'amack') setMoodAmack(item.mood); if (item.userId === 'rifa') setMoodRifa(item.mood); });
   };
 
-  useEffect(() => { 
-    if (u) {
-      loadAll(); 
-      const channel = supabase.channel('realbu-db')
-        .on('postgres_changes', { event: '*', schema: 'public' }, () => { loadAll(); })
-        .subscribe();
-      return () => { supabase.removeChannel(channel); };
-    }
-  }, [u]);
+    useEffect(() => {
+    // 1. Tarik data awal saat halaman dibuka
+    loadAll();
+
+    // 2. Aktifkan Realtime Listener agar langsung update tanpa refresh
+    const channel = supabase
+      .channel('schema-db-changes')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public' },
+        (payload) => {
+          loadAll(); // Otomatis refresh data di layar saat ada perubahan
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
 
   useEffect(() => { if (tab === 'chat') end.current?.scrollIntoView({ behavior: 'smooth' }); }, [lc, tab]);
   useEffect(() => { if (tab === 'ai') aiEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [aiChatHistory, tab]);
